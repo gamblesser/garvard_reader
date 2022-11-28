@@ -49,7 +49,7 @@ for posWord in matrixForWords:
         rusMe= examples.xpath('//span')[0].text
         
         example= examples.xpath('//div[@class="examp dexamp"]')
-        example= '.\n'.join([f"· {example_.text.strip('.')}" for example_ in takeSomelements(example,10)]).replace('/',' ').replace('\\',' ')+'.'
+        example= '.\n'.join([f"· {example_.text.strip('.')}" for example_ in takeSomelements(example,10)]).replace('/',' or ').replace('\\',' or ')+'.'
         print(meaning.text)
         print(rusMe)
         print(f'{example}',end='\n\n')
