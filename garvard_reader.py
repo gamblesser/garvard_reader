@@ -23,7 +23,7 @@ def takeSomelements(list_,count):
 words = pd.read_excel('1000 most used english words.xlsx')['WORDS']
 start = int(input('Start point\n'))
 for k,wordForSearch in enumerate(words[start-2:]):
-    print('-'*10)
+    print('-'*30)
     print(wordForSearch,'   ',start+k,end='\n\n')
     count = 0
     speak(f'Word . {wordForSearch} . in number {start+k}')
