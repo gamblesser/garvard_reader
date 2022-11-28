@@ -37,7 +37,7 @@ for k,wordForSearch in enumerate(words[start-2:]):
         
         rusMe= examples.xpath('//span')[0].text
         
-        example= examples.xpath('//div')[1:]
+        example= examples.xpath('//div[@class="examp dexamp"]')[1:]
         example= '.\n'.join([f"· {example_.text.strip('.')}" for example_ in takeSomelements(example,10)]).replace('/',' ').replace('\\',' ')+'.'
         print(meaning.text)
         print(rusMe)
@@ -46,7 +46,7 @@ for k,wordForSearch in enumerate(words[start-2:]):
         
         speak(meaning.text)
         engine.setProperty('voice', voices[0].id)
-        engine.setProperty('rate', 130)
+        engine.setProperty('rate', 150)
         tts = speak(rusMe)
         engine.setProperty('voice', voices[2].id)
         speak('EXAMPLES')
