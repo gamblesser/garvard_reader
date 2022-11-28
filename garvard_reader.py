@@ -1,7 +1,7 @@
 import pandas as pd
 from requests_html import HTMLSession
 import pyttsx3
-
+from random import shuffle
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[2].id)
@@ -21,13 +21,24 @@ def takeSomelements(list_,count):
             continue
 
 words = pd.read_excel('1000 most used english words.xlsx')['WORDS']
-start = int(input('Start point\n'))
-for k,wordForSearch in enumerate(words[start-2:]):
+start = int(input('Start point\n'))-2
+end = int(input('End point\n'))-2
+if not(end):
+    end =len(words)
+rand = input('Random? /n Y/N')
+matrixForWords = [_ for _ in range(start,end+1)]
+if rand.lower() == 'y':
+    shuffle(matrixForWords)
+    
+    
+    
+    
+for posWord in matrixForWords:
     print('-'*30)
-    print(wordForSearch,'   ',start+k,end='\n\n')
+    print(words[posWord],'   ',posWord+2,end='\n\n')
     count = 0
-    speak(f'Word . {wordForSearch} . in number {start+k}')
-    url = f'https://dictionary.cambridge.org/ru/словарь/англо-русский/{wordForSearch}'
+    speak(f'Word . {words[posWord]} . in number {posWord+2}')
+    url = f'https://dictionary.cambridge.org/ru/словарь/англо-русский/{words[posWord]}'
     session = HTMLSession()
     r = session.get(url)
     for meaning,examples in zip(r.html.xpath('//div[@class="def ddef_d db"]'),r.html.xpath('//div[@class="def-body ddef_b"]')):
@@ -37,7 +48,7 @@ for k,wordForSearch in enumerate(words[start-2:]):
         
         rusMe= examples.xpath('//span')[0].text
         
-        example= examples.xpath('//div[@class="examp dexamp"]')[1:]
+        example= examples.xpath('//div[@class="examp dexamp"]')
         example= '.\n'.join([f"· {example_.text.strip('.')}" for example_ in takeSomelements(example,10)]).replace('/',' ').replace('\\',' ')+'.'
         print(meaning.text)
         print(rusMe)
