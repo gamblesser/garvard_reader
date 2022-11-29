@@ -2,9 +2,12 @@ import pandas as pd
 from requests_html import HTMLSession
 import pyttsx3
 from random import shuffle
+import os
 from os.path import abspath
+from gtts import gTTS 
+from playsound import playsound 
 
-
+desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[2].id)
@@ -14,6 +17,16 @@ engine.runAndWait()
 path = abspath(__file__)
 index = path.rfind('\\')
 path = path[:index]
+def whatTake(text,libRed,lang='en'):
+    if libRed == '1':
+        speakGtts(text,lang)
+    elif libRed =='2':
+        speak(text)
+def speakGtts(text,lang='en'):
+    var = gTTS(text = text,lang = lang) 
+    var.save(f'{desktop}/eng.mp3')
+    playsound(f'{desktop}/eng.mp3')
+    os.remove(f'{desktop}/eng.mp3')
 def speak(str):
     engine.say(str)
     engine.runAndWait()
@@ -28,8 +41,8 @@ def takeSomelements(list_, count):
             continue
 
 
-words = pd.read_excel(f'{path}\\words.xlsx')['WORDS']
-
+words = pd.read_excel(f'{desktop}\\words.xlsx')['WORDS']
+libRed = input('1.GTTS \n 2.pyttsx3\n')
 start = input('Start point\n')
 if start == '':
     start = 0
@@ -58,7 +71,7 @@ for posWord in matrixForWords:
     print('-' * 30)
     print(words[posWord], '   ', posWord + 2, end='\n\n')
     count = 0
-    speak(f'Word . {words[posWord]} . in number {posWord+2}')
+    whatTake(f'Word . {words[posWord]} . in number {posWord+2}',libRed)
     url = f'https://dictionary.cambridge.org/ru/словарь/англо-русский/{words[posWord]}'
     session = HTMLSession()
     while True:
@@ -85,7 +98,7 @@ for posWord in matrixForWords:
         if part:
             
             print(f'{thisWord} as {part}')
-            speak(f'Word . {thisWord} . as {part}')
+            whatTake(f'Word . {thisWord} . as {part}',libRed)
             
         for block in body.xpath(
                 '//div[(@class="sense-body dsense_b" and (./div[@class="def-block ddef_block"])) or @class="pr phrase-block dphrase-block"]'
@@ -94,13 +107,12 @@ for posWord in matrixForWords:
                     block.xpath('//div[@class="def ddef_d db"]'),
                     block.xpath('//div[@class="def-body ddef_b"]')):
                 count += 1
-                speak(f'{count} meaning')
+                whatTake(f'{count} meaning',libRed)
                 phrase = block.xpath(
                     '//span[@class="phrase-title dphrase-title"]')
                 if phrase:
                     print(f'Phrase - {phrase[0].text}')
-                    speak(
-                        f'It"s phrase . {phrase[0].text.replace("/"," or ")}')
+                    whatTake(f'It"s phrase . {phrase[0].text.replace("/"," or ")}',libRed)
 
                 rusMe = examples.xpath('//span')[0].text
 
@@ -112,12 +124,11 @@ for posWord in matrixForWords:
                 print(meaning.text)
                 print(rusMe)
                 print(f'{example}', end='\n\n')
-
-                speak(meaning.text)
+                whatTake(meaning.text,libRed)
                 engine.setProperty('voice', voices[0].id)
                 engine.setProperty('rate', 150)
-                tts = speak(rusMe)
+                whatTake(rusMe,libRed,'ru')
                 engine.setProperty('voice', voices[2].id)
-                speak('EXAMPLES')
+                whatTake('EXAMPLES',libRed)
                 engine.setProperty('rate', 90)
-                tts = speak(example)
+                whatTake(example,libRed)
