@@ -3,7 +3,7 @@ from requests_html import HTMLSession
 import pyttsx3
 from random import shuffle
 
-engine = pyttsx3.init('sapi5')
+engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[2].id)
 engine.setProperty('rate', 90)
