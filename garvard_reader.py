@@ -44,7 +44,7 @@ else:
 if len(words) < end or end < 0:
     raise Exception
 
-rand = input('Random? /n Y/N')
+rand = input('Random? \n Y/N')
 matrixForWords = [_ for _ in range(start, end + 1)]
 print()
 if rand.lower() == 'y':
@@ -66,10 +66,16 @@ for posWord in matrixForWords:
                 '//span[@class="pos dpos"]')[0].text + body.xpath(
                     '//span[@class="spellvar dspellvar"]')[0].text
         except:
-            part = body.xpath('//span[@class="pos dpos"]')[0].text
-
-        print(f'{thisWord} as {part}')
-        speak(f'Word . {thisWord} . as {part}')
+            try:
+                
+                part = body.xpath('//span[@class="pos dpos"]')[0].text
+            except:
+                part=''
+        if part:
+            
+            print(f'{thisWord} as {part}')
+            speak(f'Word . {thisWord} . as {part}')
+            
         for block in body.xpath(
                 '//div[(@class="sense-body dsense_b" and (./div[@class="def-block ddef_block"])) or @class="pr phrase-block dphrase-block"]'
         ):
