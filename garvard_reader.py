@@ -2,7 +2,9 @@ import pandas as pd
 from requests_html import HTMLSession
 import pyttsx3
 from random import shuffle
+import os
 
+desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[2].id)
@@ -24,7 +26,7 @@ def takeSomelements(list_, count):
             continue
 
 
-words = pd.read_excel('1000 most used english words.xlsx')['WORDS']
+words = pd.read_excel(f'{desktop}\\words.xlsx')['WORDS']
 
 start = input('Start point\n')
 if start == '':
