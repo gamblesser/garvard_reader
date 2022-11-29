@@ -2,16 +2,18 @@ import pandas as pd
 from requests_html import HTMLSession
 import pyttsx3
 from random import shuffle
-import os
+from os.path import abspath
 
-desktop = os.path.join(os.path.join(os.environ['USERPROFILE']), 'Desktop')
+
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[2].id)
 engine.setProperty('rate', 90)
 engine.runAndWait()
 
-
+path = abspath(__file__)
+index = path.rfind('\\')
+path = path[:index]
 def speak(str):
     engine.say(str)
     engine.runAndWait()
@@ -26,7 +28,7 @@ def takeSomelements(list_, count):
             continue
 
 
-words = pd.read_excel(f'{desktop}\\words.xlsx')['WORDS']
+words = pd.read_excel(f'{path}\\words.xlsx')['WORDS']
 
 start = input('Start point\n')
 if start == '':
@@ -59,7 +61,14 @@ for posWord in matrixForWords:
     speak(f'Word . {words[posWord]} . in number {posWord+2}')
     url = f'https://dictionary.cambridge.org/ru/словарь/англо-русский/{words[posWord]}'
     session = HTMLSession()
-    r = session.get(url)
+    while True:
+        
+        try:
+        
+            r = session.get(url)
+            break
+        except:
+            continue
     for body in r.html.xpath('//div[@class="entry-body"]'):
 
         thisWord = body.xpath('//span[@class="hw dhw"]')[0].text
