@@ -18,15 +18,19 @@ path = abspath(__file__)
 index = path.rfind('\\')
 path = path[:index]
 def whatTake(text,libRed,lang='en'):
+    if text.strip()=='.' or text.strip()=='':
+        return 0
     if libRed == '1':
         speakGtts(text,lang)
     elif libRed =='2':
         speak(text)
 def speakGtts(text,lang='en'):
-    var = gTTS(text = text,lang = lang) 
+    var = gTTS(text = text,lang = lang)
+         
     var.save(f'{desktop}/eng.mp3')
     playsound(f'{desktop}/eng.mp3')
     os.remove(f'{desktop}/eng.mp3')
+    return 0
 def speak(str):
     engine.say(str)
     engine.runAndWait()
@@ -129,6 +133,8 @@ for posWord in matrixForWords:
                 engine.setProperty('rate', 150)
                 whatTake(rusMe,libRed,'ru')
                 engine.setProperty('voice', voices[2].id)
-                whatTake('EXAMPLES',libRed)
+                if example.strip() != '' and example.strip()!='.':
+                    whatTake('EXAMPLES',libRed)
+                
                 engine.setProperty('rate', 90)
                 whatTake(example,libRed)
